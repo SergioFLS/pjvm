@@ -1,6 +1,6 @@
 import struct
 from dataclasses import dataclass, field
-from enum import IntEnum
+from enum import IntEnum, IntFlag
 
 
 @dataclass
@@ -125,9 +125,17 @@ class AttributeInfo:
         #print(f'name index {constant_pool[name_index]}')
         return cls(name_index, f.read(attribute_length), constant_pool)
 
+class AccessFlags(IntFlag):
+    PUBLIC    = 0b000001
+    PRIVATE   = 0b000010
+    PROTECTED = 0b000100
+    STATIC    = 0b001000
+    FINAL     = 0b010000
+    SUPER     = 0b100000
+
 @dataclass
 class MethodInfo:
-    access_flags: int
+    access_flags: AccessFlags
     name_index: int
     descriptor_index: int
     attributes: list[AttributeInfo]
@@ -149,14 +157,14 @@ class MethodInfo:
         attributes = []
         for _ in range(attributes_count):
             attributes.append(AttributeInfo.from_file(f, constant_pool))
-        return cls(access_flags, name_index, descriptor_index, attributes, constant_pool)
+        return cls(AccessFlags(access_flags), name_index, descriptor_index, attributes, constant_pool)
 
 @dataclass
 class ClassFile:
     minor: int
     major: int
     constant_pool: ConstantPool
-    access_flags: int
+    access_flags: AccessFlags
     this_class_index: int
     super_class_index: int
     methods: list[MethodInfo]
@@ -192,5 +200,5 @@ class ClassFile:
         for _ in range(attributes_count):
             attributes.append(AttributeInfo.from_file(f, constant_pool))
 
-        return cls(minor, major, constant_pool, access_flags, this_class_index, super_class_index, methods, attributes)
+        return cls(minor, major, constant_pool, AccessFlags(access_flags), this_class_index, super_class_index, methods, attributes)
 

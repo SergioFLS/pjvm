@@ -27,7 +27,7 @@ if __name__ == '__main__':
                     stack.append(a)
                 case 0x1A:
                     # iload 0
-                    stack.append(2)
+                    stack.append(7)
                 case 0x1B:
                     # iload 1
                     stack.append(3)
@@ -41,12 +41,25 @@ if __name__ == '__main__':
                     b = stack.pop()
                     a = stack.pop()
                     stack.append(a - b)
+                case 0xA4:
+                    # if_icmple
+                    branch = struct.unpack('>H', bcode[pc:pc+2])[0]
+                    pc -= 1
+                    b = stack.pop()
+                    a = stack.pop()
+                    if a < b:
+                        pc += branch
+                        #print(f'branching to {pc}')
+                    else:
+                        pc += 3
                 case 0xAC:
                     # ireturn
                     a = stack.pop()
                     print(f'ireturn: {a}')
+                    break
                 case _:
                     raise RuntimeError(f'unknown opcode {hex(op)}')
+            #print(stack)
         #print(code)
 
     main()
