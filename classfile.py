@@ -2,6 +2,8 @@ import struct
 from dataclasses import dataclass, field
 from enum import IntEnum, IntFlag
 
+import descriptors
+
 
 @dataclass
 class ConstantUTF8Info:
@@ -150,6 +152,10 @@ class MethodInfo:
     def descriptor(self):
         if self.constant_pool is None: return None
         return self.constant_pool[self.descriptor_index].data
+
+    def parse_descriptor(self):
+        if self.descriptor is None: return None
+        return descriptors.MethodDescriptor.parse(self.descriptor.value)
 
     @classmethod
     def from_file(cls, f, constant_pool: ConstantPool):

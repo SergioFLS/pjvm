@@ -60,7 +60,12 @@ if __name__ == '__main__':
                 case _:
                     raise RuntimeError(f'unknown opcode {hex(op)}')
             #print(stack)
-        #print(code)
+        
+        for method in cl.methods:
+            assert method.name
+            assert method.descriptor
+            print(method.name.value)
+            print(method.parse_descriptor())
 
     main()
 
