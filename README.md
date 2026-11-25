@@ -16,6 +16,7 @@ Toy JVM written in Python made to get more familiar on how it works.
 
 ## Stuff that would be cool to see
 
+* Lua-like API for scripting
 * Running a J2ME (MIDP 2.0 w/ CLDC 1.1) game
 * Running a Java applet game (Need For Madness, Minecraft Classic?)
 * Running Kotlin JVM code compiled for Java 8
